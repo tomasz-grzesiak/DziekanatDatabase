@@ -16,6 +16,8 @@ import { DialogModule } from 'primeng/dialog';
 import { CardModule } from 'primeng/card';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
+import { FieldTableComponent } from './components/field-table/field-table.component';
+import { FacultyTableComponent } from './components/faculty-table/faculty-table.component';
 
 
 
@@ -23,7 +25,9 @@ import { DropdownModule } from 'primeng/dropdown';
   declarations: [
     AppComponent,
     NavbarComponent,
-    StudentTableComponent
+    StudentTableComponent,
+    FieldTableComponent,
+    FacultyTableComponent
   ],
   imports: [
     BrowserModule,
