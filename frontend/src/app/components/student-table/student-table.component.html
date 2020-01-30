@@ -14,8 +14,8 @@
                 <input *ngSwitchCase="'nazwisko'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')" class="full">
                 <input *ngSwitchCase="'imie'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')" class="full">
                 <p-multiSelect *ngSwitchCase="'semestr'" [options]="terms" defaultLabel="Wszystkie" (onChange)="dt.filter($event.value, col.field, 'in')" class="full"></p-multiSelect>
-                <input *ngSwitchCase="'kierunek'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')" class="full">
-                <input *ngSwitchCase="'wydzial'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')" class="full" >
+                <p-multiSelect *ngSwitchCase="'kierunek'" [options]="fields" defaultLabel="Wszystkie" (onChange)="dt.filter($event.value, col.field, 'in')" class="full"></p-multiSelect>
+                <p-multiSelect *ngSwitchCase="'wydzial'" [options]="faculties" defaultLabel="Wszystkie" (onChange)="dt.filter($event.value, col.field, 'in')" class="full"></p-multiSelect>
             </th>
         </tr>
     </ng-template>
@@ -41,7 +41,7 @@
                 <label for="numer_indeksu">Numer indeksu</label>
             </div>
             <div class="ui-g-8">
-                <input class="full" pInputText id="numer_indeksu" [(ngModel)]="student.numer_indeksu" autofocus />
+                {{student.numer_indeksu}}
             </div>
         </div>
         <div class="ui-g-12">
@@ -65,7 +65,7 @@
                 <label for="semestr">Semestr</label>
             </div>
             <div class="ui-g-8">
-                <input class="full" pInputText id="semestr" [(ngModel)]="student.semestr" />
+                <p-dropdown [options]="terms" [(ngModel)]="student.semestr"></p-dropdown>
             </div>
         </div>
         <div class="ui-g-12">
@@ -73,7 +73,7 @@
                 <label for="kierunek">Kierunek</label>
             </div>
             <div class="ui-g-8">
-                <input class="full" pInputText id="kierunek" [(ngModel)]="student.kierunek" />
+                <p-dropdown [options]="fields" [(ngModel)]="student.kierunek"></p-dropdown>
             </div>
         </div>
         <div class="ui-g-12">
@@ -81,7 +81,7 @@
                 <label for="wydzial">Wydział</label>
             </div>
             <div class="ui-g-8">
-                <p-dropdown [options]="fields" [(ngModel)]="student.wydzial"></p-dropdown>
+                {{student.wydzial}}
             </div>
         </div>
     </div>

@@ -1,7 +1,7 @@
 <nav class="navbar justify-content-center navbar-expand-sm bg-dark navbar-dark">
   <ul class="navbar-nav">
     <li *ngFor="let page of pages" class="nav-item">
-        <a href="#" class="nav-link"(click)="onClick(page) ">{{page}}</a>
+        <a [routerLink]="page.target" routerLinkActive="active" class="nav-link">{{page.name}}</a>
     </li>  
   </ul>
 </nav>

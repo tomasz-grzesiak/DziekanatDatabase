@@ -1,0 +1,77 @@
+<p-card class="card">
+        <p-table #dt [columns]="cols" [value]="fields" selectionMode="single" [(selection)]="selectedField"
+         (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15" [reorderableColumns]="true" [rowsPerPageOptions]="[5,10,15]">
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                        {{col.header}}
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                </tr>
+                <tr>
+                    <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                        <input *ngSwitchCase="'nazwa'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')" class="full">
+                        <p-multiSelect *ngSwitchCase="'wydzial'" [options]="faculties" defaultLabel="Wszystkie" (onChange)="dt.filter($event.value, col.field, 'in')" class="full"></p-multiSelect>
+                        <input *ngSwitchCase="'iloscStudentow'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'gte')" class="full">
+                        <input *ngSwitchCase="'iloscPrzedmiotow'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'gte')" class="full">
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData">
+                    <td *ngFor="let col of columns">
+                        {{rowData[col.field]}}
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary" let-rowData>
+                <div style="text-align:left">
+                    <button type="button" pButton icon="pi pi-plus" (click)="showDialogToAdd()" label="Add"></button>
+                </div>
+            </ng-template>   
+        </p-table>
+        </p-card>
+        
+        <p-dialog header="Informacje na temat kierunku" [(visible)]="displayDialog" [focusOnShow]="false" [responsive]="true" showEffect="fade" [modal]="true"  [style]="{width: '400px'}">
+            <div class="ui-g ui-fluid" *ngIf="field">
+                <div class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="nazwa">Nazwa</label>
+                    </div>
+                    <div class="ui-g-8">
+                        <input class="full" pInputText id="nazwa" [(ngModel)]="field.nazwa" autofocus />
+                    </div>
+                </div>
+                <div class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="wydzial">Wydział</label>
+                    </div>
+                    <div class="ui-g-8">
+                        <p-dropdown [options]="faculties" [(ngModel)]="field.wydzial"></p-dropdown>
+                    </div>
+                </div>
+                <div class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="iloscStudentow">Ilość studentow</label>
+                    </div>
+                    <div class="ui-g-8">
+                        {{field.iloscStudentow}}
+                    </div>
+                </div>
+                <div class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="iloscPrzedmiotow">Ilość przedmiotów</label>
+                    </div>
+                    <div class="ui-g-8">
+                        {{field.iloscPrzedmiotow}}
+                    </div>
+                </div>
+            </div>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                    <button type="button" pButton icon="pi pi-times" (click)="delete()" label="Delete" *ngIf="!newField"></button>
+                    <button type="button" pButton icon="pi pi-check" (click)="save()" label="Save"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
+        

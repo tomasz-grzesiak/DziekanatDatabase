@@ -7,13 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
-  pages = ["Wydziały", "Kierunki", "Przedmioty", "Studenci", "Wykładowcy", "Stawki"];
+  pages = [{name: "Wydziały", target: '/wydzialy'},
+          {name: "Kierunki", target: '/kierunki'},
+          {name: "Przedmioty", terget: '/przedmioty'},
+          {name: "Studenci", target: '/studenci'},
+          {name: "Wykładowcy", tatrget: '/wykladowcy'},
+          {name: "Stawki", target: '/stawki'}];
 
   ngOnInit(): void {}
-
-  onClick(name: string): void {
-    console.log(name);
-  }
 
   setClass(page) {
     if (page.subpage) {

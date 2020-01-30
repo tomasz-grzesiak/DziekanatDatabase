@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../../services/database.service'
 import { Student } from '../../interfaces/student'
 import { SelectItem } from 'primeng/api';
-import { Wydzial } from 'src/app/interfaces/field';
-import { MultiSelectItem } from 'primeng/multiselect/public_api';
+import { Nazwa } from 'src/app/interfaces/nazwa';
 
 
 @Component({
@@ -16,21 +15,30 @@ export class StudentTableComponent implements OnInit {
   displayDialog: boolean;
   student: Student = {numer_indeksu: null, nazwisko: null, imie: null, semestr: null, kierunek: null, wydzial: null};
   selectedStudent: Student;
-  newStudent: boolean
+  newStudent: boolean;
   students: Student[];
   cols: any[];
   terms: SelectItem[];
   fields: SelectItem[];
+  faculties: SelectItem[];
 
   constructor(private dbService: DatabaseService) { }
 
   ngOnInit() {
     this.dbService.getStudents().subscribe(data => this.students = data);
+
     this.fields = [];
-    let tmpFields: Wydzial[];
-    this.dbService.getFields().subscribe(data => {
+    let tmpFields: Nazwa[];
+    this.dbService.getFieldNames().subscribe(data => {
       tmpFields = data;
       tmpFields.forEach(val => this.fields.push({label: val.nazwa, value: val.nazwa}))
+    }, error => console.error(error));
+
+    this.faculties = [];
+    let tmpFaculties : Nazwa[];
+    this.dbService.getFacultiesNames().subscribe(data => {
+      tmpFaculties = data;
+      tmpFaculties.forEach(val => this.faculties.push({label: val.nazwa, value: val.nazwa}))
     }, error => console.error(error));
 
     this.cols = [
@@ -65,24 +73,45 @@ export class StudentTableComponent implements OnInit {
 
   save() {
     let students = [...this.students];
-    if (this.newStudent) {
-      this.dbService.newStudent(this.student).subscribe(data => console.log(data), error => console.error(error));
-      students.push(this.student);
+    if (this.newStudent) { 
+      this.dbService.newStudent(this.student).subscribe(data => {
+        if (data.sqlMessage) {
+          alert(data.sqlMessage);
+          return;
+        }
+        students.push(this.student);
+        this.student = null;
+        alert(`Dodano studenta`);
+      });
     }
     else {
-      this.dbService.updateStudent(this.student).subscribe(data => console.log(data), error => console.error(error));
-      students[this.students.indexOf(this.selectedStudent)] = this.student;
+      this.dbService.updateStudent(this.student).subscribe(data => {
+        if (data.sqlMessage) {
+          alert(data.sqlMessage);
+          return;
+        }
+        console.log(this.selectedStudent);
+        students[this.students.indexOf(this.selectedStudent)] = this.student;
+        this.student = null;
+        alert(`Zmodyfikowano dane studenta`);
+      });
     }
     this.students = students;
-    this.student = null;
     this.displayDialog = false;
   }
 
   delete() {
-    let index = this.students.indexOf(this.selectedStudent);
-    this.students = this.students.filter((val, i) => i != index);
-    this.student = null;
-    this.displayDialog = false;
+    this.dbService.removeStudent(this.selectedStudent).subscribe(data => {
+      if (data.sqlMessage) {
+        alert(data.sqlMessage);
+        return;
+      }
+      alert(`Student usunięty z listy`);
+      let index = this.students.indexOf(this.selectedStudent);
+      this.students = this.students.filter((val, i) => i != index);
+      this.student = null;
+      this.displayDialog = false;
+    });
   }
 
   onRowSelect(event) {
