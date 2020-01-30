@@ -1,0 +1,91 @@
+<p-card class="card">
+    <p-table #dt [columns]="cols" [value]="subjects" selectionMode="single" [(selection)]="selectedSubject"
+        (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15" [reorderableColumns]="true"
+        [rowsPerPageOptions]="[5,10,15]">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                    {{col.header}}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+            </tr>
+            <tr>
+                <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                    <p-multiSelect *ngSwitchCase="'kierunek'" [options]="fields" defaultLabel="Wszystkie"
+                        (onChange)="dt.filter($event.value, col.field, 'in')" class="full"></p-multiSelect>
+                    <p-multiSelect *ngSwitchCase="'semestr'" [options]="terms" defaultLabel="Wszystkie"
+                        (onChange)="dt.filter($event.value, col.field, 'in')" class="full"></p-multiSelect>
+                    <input *ngSwitchCase="'stawkaZaGrupe'" pInputText type="text"
+                        (input)="dt.filter($event.target.value, col.field, 'gte')" class="full">
+                    <input *ngSwitchCase="'iloscGrup'" pInputText type="text"
+                        (input)="dt.filter($event.target.value, col.field, 'gte')" class="full">
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+                <td *ngFor="let col of columns">
+                    {{rowData[col.field]}}
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary" let-rowData>
+            <div style="text-align:left">
+                <button type="button" pButton icon="pi pi-plus" (click)="showDialogToAdd()" label="Add"></button>
+            </div>
+        </ng-template>
+    </p-table>
+</p-card>
+
+<p-dialog header="Informacje na temat przedmiotu" [(visible)]="displayDialog" [focusOnShow]="false" [responsive]="true"
+    showEffect="fade" [modal]="true" [style]="{width: '400px'}">
+    <div class="ui-g ui-fluid" *ngIf="subject">
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="id">ID</label>
+            </div>
+            <div class="ui-g-8">
+                {{subject.id}}
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="kierunek">Kierunek</label>
+            </div>
+            <div class="ui-g-8">
+                <p-dropdown [options]="fields" [(ngModel)]="subject.kierunek"></p-dropdown>
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="semestr">Semestr</label>
+            </div>
+            <div class="ui-g-8">
+                <p-dropdown [options]="terms" [(ngModel)]="subject.semestr"></p-dropdown>
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="stawkaZaGrupe">Stawka za grupę</label>
+            </div>
+            <div class="ui-g-8">
+                <input class="full" pInputText id="stawkaZaGrupe" [(ngModel)]="subject.stawkaZaGrupe" autofocus />
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="iloscGrup">Ilość grup</label>
+            </div>
+            <div class="ui-g-8">
+                {{subject.iloscGrup}}
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="pi pi-times" (click)="delete()" label="Delete"
+                *ngIf="!newSubject"></button>
+            <button type="button" pButton icon="pi pi-check" (click)="save()" label="Save"></button>
+        </div>
+    </p-footer>
+</p-dialog>

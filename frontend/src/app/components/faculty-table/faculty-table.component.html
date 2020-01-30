@@ -1,1 +1,93 @@
-<p>faculty-table works!</p>
+<p-card class="card">
+    <p-table #dt [columns]="cols" [value]="faculties" selectionMode="single" [(selection)]="selectedFaculty"
+        (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15" [reorderableColumns]="true"
+        [rowsPerPageOptions]="[5, 10, 15]">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                    {{ col.header }}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+            </tr>
+            <tr>
+                <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                    <input *ngSwitchCase="'nazwa'" pInputText type="text"
+                        (input)="dt.filter($event.target.value, col.field, 'contains')" class="full" />
+                    <input *ngSwitchCase="'adres'" pInputText type="text"
+                        (input)="dt.filter($event.target.value, col.field, 'contains')" class="full" />
+                    <input *ngSwitchCase="'iloscKierunkow'" pInputText type="text"
+                        (input)="dt.filter($event.target.value, col.field, 'gte')" class="full" />
+                    <input *ngSwitchCase="'iloscWykladowcow'" pInputText type="text"
+                        (input)="dt.filter($event.target.value, col.field, 'gte')" class="full" />
+                    <input *ngSwitchCase="'iloscStudentow'" pInputText type="text"
+                        (input)="dt.filter($event.target.value, col.field, 'gte')" class="full" />
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+                <td *ngFor="let col of columns">
+                    {{ rowData[col.field] }}
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary" let-rowData>
+            <div style="text-align:left">
+                <button type="button" pButton icon="pi pi-plus" (click)="showDialogToAdd()" label="Add"></button>
+            </div>
+        </ng-template>
+    </p-table>
+</p-card>
+
+<p-dialog header="Informacje na temat wydziału" [(visible)]="displayDialog" [focusOnShow]="false" [responsive]="true"
+    showEffect="fade" [modal]="true" [style]="{ width: '400px' }">
+    <div class="ui-g ui-fluid" *ngIf="faculty">
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="nazwa">Nazwa</label>
+            </div>
+            <div class="ui-g-8">
+                <input class="full" pInputText id="nazwa" [(ngModel)]="faculty.nazwa" autofocus />
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="adres">Adres</label>
+            </div>
+            <div class="ui-g-8">
+                <input class="full" pInputText id="adres" [(ngModel)]="faculty.adres" autofocus />
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="iloscPrzedmiotow">Ilość kierunków</label>
+            </div>
+            <div class="ui-g-8">
+                {{ faculty.iloscKierunkow }}
+            </div>
+        </div>
+        <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="iloscWykladowcow">Ilość wykładowców</label>
+                </div>
+                <div class="ui-g-8">
+                    {{ faculty.iloscWykladowcow }}
+                </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="iloscStudentow">Ilość studentow</label>
+            </div>
+            <div class="ui-g-8">
+                {{ faculty.iloscStudentow }}
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="pi pi-times" (click)="delete()" label="Delete"
+                *ngIf="!newFaculty"></button>
+            <button type="button" pButton icon="pi pi-check" (click)="save()" label="Save"></button>
+        </div>
+    </p-footer>
+</p-dialog>

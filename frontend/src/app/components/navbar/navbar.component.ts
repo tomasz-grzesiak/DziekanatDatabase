@@ -9,9 +9,9 @@ export class NavbarComponent implements OnInit {
 
   pages = [{name: "Wydziały", target: '/wydzialy'},
           {name: "Kierunki", target: '/kierunki'},
-          {name: "Przedmioty", terget: '/przedmioty'},
+          {name: "Przedmioty", target: '/przedmioty'},
           {name: "Studenci", target: '/studenci'},
-          {name: "Wykładowcy", tatrget: '/wykladowcy'},
+          {name: "Wykładowcy", target: '/wykladowcy'},
           {name: "Stawki", target: '/stawki'}];
 
   ngOnInit(): void {}

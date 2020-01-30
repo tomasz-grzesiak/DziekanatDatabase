@@ -18,7 +18,9 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
 import { FieldTableComponent } from './components/field-table/field-table.component';
 import { FacultyTableComponent } from './components/faculty-table/faculty-table.component';
-
+import { SubjectTableComponent } from './components/subject-table/subject-table.component';
+import { LecturerTableComponent } from './components/lecturer-table/lecturer-table.component';
+import { JobTableComponent } from './components/job-table/job-table.component'
 
 
 @NgModule({
@@ -27,7 +29,10 @@ import { FacultyTableComponent } from './components/faculty-table/faculty-table.
     NavbarComponent,
     StudentTableComponent,
     FieldTableComponent,
-    FacultyTableComponent
+    FacultyTableComponent,
+    SubjectTableComponent,
+    LecturerTableComponent,
+    JobTableComponent
   ],
   imports: [
     BrowserModule,

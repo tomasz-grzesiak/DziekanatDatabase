@@ -1,0 +1,113 @@
+<p-card class="card">
+    <p-table #dt [columns]="cols" [value]="lecturers" selectionMode="single" [(selection)]="selectedLecturer"
+        (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15" [reorderableColumns]="true"
+        [rowsPerPageOptions]="[5,10,15]">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                    {{col.header}}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+            </tr>
+            <tr>
+                <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                    <input *ngSwitchCase="'nazwisko'" pInputText type="text"
+                        (input)="dt.filter($event.target.value, col.field, 'contains')" class="full">
+                    <input *ngSwitchCase="'imie'" pInputText type="text"
+                        (input)="dt.filter($event.target.value, col.field, 'contains')" class="full">
+                    <p-multiSelect *ngSwitchCase="'wydzial'" [options]="faculties" defaultLabel="Wszystkie"
+                        (onChange)="dt.filter($event.value, col.field, 'in')" class="full"></p-multiSelect>
+                    <input *ngSwitchCase="'pokoj'" pInputText type="text"
+                        (input)="dt.filter($event.target.value, col.field, 'contains')" class="full">
+                    <p-multiSelect *ngSwitchCase="'etat'" [options]="jobs" defaultLabel="Wszystkie"
+                        (onChange)="dt.filter($event.value, col.field, 'in')" class="full"></p-multiSelect>    
+                    <input *ngSwitchCase="'iloscGrup'" pInputText type="text"
+                        (input)="dt.filter($event.target.value, col.field, 'gte')" class="full">
+                    <input *ngSwitchCase="'wyplata'" pInputText type="text"
+                        (input)="dt.filter($event.target.value, col.field, 'gte')" class="full">
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+                <td *ngFor="let col of columns">
+                    {{rowData[col.field]}}
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary" let-rowData>
+            <div style="text-align:left">
+                <button type="button" pButton icon="pi pi-plus" (click)="showDialogToAdd()" label="Add"></button>
+            </div>
+        </ng-template>
+    </p-table>
+</p-card>
+
+<p-dialog header="Informacje na temat wykładowcy" [(visible)]="displayDialog" [focusOnShow]="false" [responsive]="true"
+    showEffect="fade" [modal]="true" [style]="{width: '400px'}">
+    <div class="ui-g ui-fluid" *ngIf="lecturer">
+            <div class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="id">ID</label>
+                    </div>
+                    <div class="ui-g-8">
+                        {{lecturer.id}}
+                    </div>
+                </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="nazwisko">Nazwisko</label>
+            </div>
+            <div class="ui-g-8">
+                <input class="full" pInputText id="nazwisko" [(ngModel)]="lecturer.nazwisko" autofocus />
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="wydzial">Wydział</label>
+            </div>
+            <div class="ui-g-8">
+                <p-dropdown [options]="faculties" [(ngModel)]="lecturer.wydzial"></p-dropdown>
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="pokoj">Numer pokoju</label>
+            </div>
+            <div class="ui-g-8">
+                    <input class="full" pInputText id="pokoj" [(ngModel)]="lecturer.pokoj" autofocus />
+                </div>
+        </div>
+        <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="etat">Etat</label>
+                </div>
+                <div class="ui-g-8">
+                    <p-dropdown [options]="jobs" [(ngModel)]="lecturer.etat"></p-dropdown>
+                </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="iloscGrup">Ilość grup</label>
+            </div>
+            <div class="ui-g-8">
+                {{lecturer.iloscGrup}}
+            </div>
+        </div>
+        <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="wyplata">Wypłata</label>
+                </div>
+                <div class="ui-g-8">
+                    {{lecturer.wyplata}}
+                </div>
+            </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="pi pi-times" (click)="delete()" label="Delete"
+                *ngIf="!newLecturer"></button>
+            <button type="button" pButton icon="pi pi-check" (click)="save()" label="Save"></button>
+        </div>
+    </p-footer>
+</p-dialog>
